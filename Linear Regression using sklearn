@@ -1,0 +1,35 @@
+import pandas as pd  
+import numpy as np  
+import matplotlib.pyplot as plt 
+dataset = pd.read_csv('driving.csv')
+print(dataset)
+
+X = dataset.iloc[:, :-1].values  
+y = dataset.iloc[:, 1].values 
+
+from sklearn.model_selection import train_test_split  
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0) 
+
+from sklearn.linear_model import LinearRegression  
+regressor = LinearRegression()  
+regressor.fit(X_train, y_train)
+
+print("intercept: ", regressor.intercept_)  
+print("coef",regressor.coef_)  
+
+y_pred = regressor.predict(X)
+print(y_pred)
+
+error=0
+m= dataset.shape[0]
+print(m)
+print(dataset['Risk_score'][0])
+
+for i in range(0,m):
+	error = error + (y_pred[i] - dataset['Risk_score'][i])**2
+
+print("cost function",error/(2*m))
+
+plt.scatter(dataset['Hours'],dataset['Risk_score'])
+plt.plot(dataset['Hours'], y_pred) 
+plt.show()
